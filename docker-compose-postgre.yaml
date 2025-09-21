@@ -1,0 +1,32 @@
+version: "3.9"
+
+services:
+  db_service1:
+    image: postgres:15
+    container_name: container_name
+    restart: always
+    environment:
+      POSTGRES_USER: POSTGRES_USER
+      POSTGRES_PASSWORD: POSTGRES_PASSWORD
+      POSTGRES_DB: POSTGRES_DB
+    ports:
+      - "5433:5432"
+    volumes:
+      - db_service1_data:/var/lib/postgresql/data
+
+  db_service2:
+    image: postgres:15
+    container_name: container_name
+    restart: always
+    environment:
+      POSTGRES_USER: POSTGRES_USER
+      POSTGRES_PASSWORD: POSTGRES_PASSWORD
+      POSTGRES_DB: POSTGRES_DB
+    ports:
+      - "5434:5432"
+    volumes:
+      - db_service2_data:/var/lib/postgresql/data
+
+volumes:
+  db_service1_data:
+  db_service2_data:
