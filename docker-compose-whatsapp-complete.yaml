@@ -1,0 +1,60 @@
+version: '3.8'
+
+services:
+
+  n8n-container:
+    image: n8nio/n8n:latest
+    container_name: n8n
+    ports:
+      - "5678:5678"
+    volumes:
+      - ./:/home/node/.n8n
+    environment:
+      GENERIC_TIMEZONE: America/Sao_Paulo
+    restart: unless-stopped
+    
+  api:
+    container_name: evolution_api
+    image: atendai/evolution-api:latest
+    restart: always
+    ports:
+      - "8080:8080"
+    volumes:
+      - evolution_instances:/evolution/instances
+    networks:
+      - shared-net
+    env_file:
+      - .env
+
+  # === PostgreSQL ===
+  postgres:
+    image: postgres:13
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: typebot
+      POSTGRES_DB: evolution_db
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+    networks:
+      - shared-net
+
+  # === Redis ===
+  redis:
+    image: redis:alpine
+    command: redis-server --requirepass Redis2019!
+    restart: always
+    ports:
+      - "6379:6379"
+    networks:
+      - shared-net
+
+# === Volumes ===
+volumes:
+  evolution_instances:
+  pg_data:
+
+# === Network ===
+networks:
+  shared-net:
+    driver: bridge
